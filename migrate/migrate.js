@@ -11,8 +11,8 @@ const PB_URL = process.env.PB_URL || 'http://127.0.0.1:8090';
 const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@glam.com';
 const PB_ADMIN_PASSWORD = process.env.PB_ADMIN_PASSWORD || 'Admin123456!';
 
-const CSV_PATH = path.resolve(__dirname, '..', 'dresses_rows.csv');
-const IMAGES_DIR = path.resolve(__dirname, '..', 'glam_images');
+const CSV_PATH = path.resolve(__dirname, 'dresses_rows.csv');
+const IMAGES_DIR = path.resolve(__dirname, 'glam_images');
 
 const pb = new PocketBase(PB_URL);
 

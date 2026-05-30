@@ -3,16 +3,45 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: catalogo-glam-pb
-    ports:
-      - "8090:8090"
+    container_name: glam-pb
+    restart: unless-stopped
     volumes:
       - ./pb_data:/pb/pb_data
     environment:
       - PB_ENCRYPTION_KEY=${PB_ENCRYPTION_KEY:-}
-    restart: unless-stopped
     healthcheck:
-      test: wget --spider http://127.0.0.1:8090/api/health || exit 1
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8090/api/health"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.glam-pb.rule=Host(`api.glamvestidospereira.com`)"
+      - "traefik.http.routers.glam-pb.entrypoints=websecure"
+      - "traefik.http.routers.glam-pb.tls=true"
+      - "traefik.http.routers.glam-pb.tls.certresolver=myresolver"
+      - "traefik.http.services.glam-pb.loadbalancer.server.port=8090"
+    networks:
+      - proxy_network
+      - internal
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.migrate
+    environment:
+      - PB_URL=http://pocketbase:8090
+      - PB_ADMIN_EMAIL=${PB_ADMIN_EMAIL}
+      - PB_ADMIN_PASSWORD=${PB_ADMIN_PASSWORD}
+    depends_on:
+      pocketbase:
+        condition: service_healthy
+    networks:
+      - internal
+    profiles:
+      - migrate
+
+networks:
+  proxy_network:
+    external: true
+  internal:

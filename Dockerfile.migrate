@@ -1,0 +1,12 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY migrate/package.json migrate/package-lock.json ./
+RUN npm ci
+
+COPY migrate/migrate.js ./
+COPY dresses_rows.csv ./
+COPY glam_images/ ./glam_images/
+
+CMD ["node", "migrate.js"]
