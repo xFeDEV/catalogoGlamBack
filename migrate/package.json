@@ -1,0 +1,13 @@
+{
+  "name": "catalogo-glam-migrate",
+  "version": "1.0.0",
+  "description": "Migracion de datos CSV + imagenes a PocketBase",
+  "type": "module",
+  "scripts": {
+    "migrate": "node migrate.js"
+  },
+  "dependencies": {
+    "pocketbase": "^0.26.2",
+    "csv-parser": "^3.2.0"
+  }
+}

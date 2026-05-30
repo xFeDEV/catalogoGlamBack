@@ -1,0 +1,18 @@
+services:
+  pocketbase:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: catalogo-glam-pb
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./pb_data:/pb/pb_data
+    environment:
+      - PB_ENCRYPTION_KEY=${PB_ENCRYPTION_KEY:-}
+    restart: unless-stopped
+    healthcheck:
+      test: wget --spider http://127.0.0.1:8090/api/health || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
